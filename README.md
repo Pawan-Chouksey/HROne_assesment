@@ -1,26 +1,45 @@
-# Candidate kit
-
-Read in this order:
-
-1. `PROBLEM_STATEMENT.docx`: what you are asked to do, how it is evaluated.
-2. `openapi.yaml`: the API contract and the business rules (R1 - R10).
-3. `DATA_MODEL.md`: what is stored in MongoDB, with nine sample documents.
-4. `app/main.py`: the starter. Put **all** your code in this one file. It must start with `uvicorn app.main:app --port 8000`.
-5. `REVIEW.md`, `DECISIONS.md`: templates to fill in.
-
-`sample_data/` holds the nine sample documents as MongoDB Extended JSON; `sample_seed.py` loads them. The grader's dataset is
-much larger and contains cases they do not show.
+# Employee Attendance & Analytics API
 
 ## Local setup
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env            # set MONGO_URI / MONGO_DB (local docker: docker run -p 27017:27017 mongo:7)
-python sample_seed.py
-uvicorn app.main:app --port 8000 --reload
-```
-MongoDB **6.0 or newer** is required (the grader uses 7.0). MongoDB Atlas free tier (M0) works.
 
-## Submit
-A public Git repository with `app/main.py`, `requirements.txt`, `REVIEW.md`, `DECISIONS.md` and a short `README.md`.
-No `.env`, no secrets, no Dockerfile.
+1. **Start MongoDB:**
+   - **Local instance (Docker):**
+     ```bash
+     docker run -d -p 27017:27017 --name mongo mongo:7
+     ```
+   - **Or MongoDB Atlas (Free Tier M0):**
+     Create a free cluster on MongoDB Atlas and copy your connection string.
+
+2. **Configure environment variables (Optional):**
+   If using Atlas or custom credentials, create a `.env` file from the example:
+   ```bash
+   cp .env.example .env
+   ```
+   Example `.env` for MongoDB Atlas:
+   ```text
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority
+   MONGO_DB=attendance_db
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Load sample data into MongoDB:**
+   ```bash
+   python sample_seed.py
+   ```
+
+5. **Start the API server:**
+   ```bash
+   uvicorn app.main:app --port 8000 --reload
+   ```
+
+Interactive API documentation will be available at `http://localhost:8000/docs`.
+
+## Notes
+
+- All application code is in `app/main.py`.
+- Indexes are created automatically at startup.
+- Review findings and architectural decisions are documented in `REVIEW.md` and `DECISIONS.md`.
